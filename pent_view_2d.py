@@ -5,7 +5,7 @@ import os
 import time
 
 
-class MazeView2D:
+class PentagoView2D:
 
     def __init__(self, maze_name="Pentago", maze_size=(6, 6), screen_size=(640, 640), enable_render=True):
 

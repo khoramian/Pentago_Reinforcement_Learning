@@ -2,7 +2,7 @@ import numpy as np
 import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
-from pent_view_2d import MazeView2D
+from pent_view_2d import PentagoView2D
 import time
 
 
@@ -13,7 +13,7 @@ class PentagoEnv(gym.Env):
         self.enable_render = enable_render
 
         if maze_size:
-            self.maze_view = MazeView2D(maze_size=maze_size, screen_size=(640, 640), enable_render=enable_render)
+            self.maze_view = PentagoView2D(maze_size=maze_size, screen_size=(640, 640), enable_render=enable_render)
         else:
             raise AttributeError("One must supply the maze_size (2D)")
 
@@ -147,7 +147,7 @@ class PentagoEnv(gym.Env):
 
     def show_result(self):
         self.maze_view.show_result(self.status)
-        time.sleep(10)
+        time.sleep(5)
 
 
     def render(self, mode="human", close=False):
