@@ -18,14 +18,20 @@ if __name__ == "__main__":
         agent_action = env.action_space.sample()
 
         # action = env.action_space(agent_action)
+        taken, done = env.step(agent_action)
 
-        while env.step(agent_action) is False:
+        while taken is True:
             agent_action = env.action_space.sample()
+            taken, done = env.step(agent_action)
 
         env.render()
 
         if env.is_game_over():
             sys.exit()
+
+        if done:
+            env.show_result()
+            break
 
     print('bye')
     # maze = MazeView2D(screen_size=(640, 640), maze_size=(6, 6))

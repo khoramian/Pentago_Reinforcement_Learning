@@ -580,6 +580,26 @@ class MazeView2D:
             else:
                 raise ValueError('array not found in env list.')
 
+    def show_result(self, status):
+
+        back = pygame.Surface(self.screen.get_size()).convert()
+
+        if status == 0:
+            pygame.display.set_caption('Draw!')
+            back.fill((255, 0, 255))
+
+        if status == 1:
+            pygame.display.set_caption('Environment Won!')
+            back.fill((0, 0, 255))
+
+        if status == 2:
+            pygame.display.set_caption('Agent Won!')
+            back.fill((255, 0, 0))
+
+        # update the screen
+        self.screen.blit(back, (0, 0))
+        pygame.display.flip()
+
     @property
     def env(self):
         return self.__env

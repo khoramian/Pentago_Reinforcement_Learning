@@ -56,12 +56,17 @@ class PentagoEnv(gym.Env):
 
     def step(self, agent_action):
 
+        taken = False
+        done = False
+        self.status = 0
+
         if self.action_space.contains(agent_action) is False:
             raise AttributeError("Must supply an action from Action Box")
 
         if self.maze_view.is_taken(agent_action[0:2]):
             print("Button location for agent is taken. action was: " + str(agent_action))
-            return False
+            taken = True
+            return taken , done
 
         print('Agent action is:' + str(agent_action))
         self.maze_view.play_agent(agent_action)
@@ -75,19 +80,20 @@ class PentagoEnv(gym.Env):
             print('Both has won the game. It is a draw!!!')
         elif env_win:
             print('Environment has won the game!!!')
+            self.status = 1
         elif agent_win:
             print('Agent has won the game!!!')
+            self.status = 2
         elif len(self.maze_view.env) + len(self.maze_view.agent) == self.maze_size[0] * self.maze_size[0]:
             print('No one has won the game. It is a draw!!!')
         else:    # continue the game
             done = False
 
-        if done:
-            time.sleep(20)
-            raise ValueError('done')
-
-        if self.enable_render is True:   ##############
-            self.render()
+        if done is False:
+            if self.enable_render is True:  ##############
+                self.render()
+        else:
+            return taken , done
 
         # choose a random button for env
         env_action = self.action_space.sample()
@@ -103,36 +109,27 @@ class PentagoEnv(gym.Env):
         agent_win = self.maze_view.agent_horizontal_line() or self.maze_view.agent_vertical_line() or self.maze_view.agent_diagonal_line()
 
         done = True
+        self.status = 0
 
         if env_win and agent_win:
             print('Both has won the game. It is a draw!!!')
         elif env_win:
             print('Environment has won the game!!!')
+            self.status = 1
         elif agent_win:
             print('Agent has won the game!!!')
+            self.status = 2
         elif len(self.maze_view.env) + len(self.maze_view.agent) == self.maze_size[0] * self.maze_size[0]:
             print('No one has won the game. It is a draw!!!')
         else:    # continue the game
             done = False
 
-        if done:
-            time.sleep(20)
-            raise ValueError('done')
+        return taken, done
+        # reward = False
+        # self.state = (self.maze_view.env, self.maze_view.agent)
+        # info = {}
+        # return self.state, reward, done, info
 
-
-        # if np.array_equal(self.maze_view.robot, self.maze_view.goal):
-        #     reward = 1
-        #     done = True
-        # else:
-        #     reward = -0.1/(self.maze_size[0]*self.maze_size[1])
-        #     done = False
-
-        reward = False
-        self.state = (self.maze_view.env, self.maze_view.agent)
-
-        info = {}
-
-        return self.state, reward, done, info
 
     def reset(self):
         action = self.action_space.sample()
@@ -148,12 +145,17 @@ class PentagoEnv(gym.Env):
     def is_game_over(self):
         return self.maze_view.game_over
 
+    def show_result(self):
+        self.maze_view.show_result(self.status)
+        time.sleep(10)
+
+
     def render(self, mode="human", close=False):
         if close:
             self.maze_view.quit_game()
 
-        # time.sleep(2)
         x = self.maze_view.update(mode)
+        time.sleep(2)
 
         return x
 
