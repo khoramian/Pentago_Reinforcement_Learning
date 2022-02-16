@@ -1,10 +1,5 @@
 import sys
-import numpy as np
-import math
-import random
-import gym
 from pentago_env import PentagoEnv
-from pent_view_2d import MazeView2D
 
 if __name__ == "__main__":
 
@@ -13,8 +8,7 @@ if __name__ == "__main__":
     env.render()
 
     for i in range(20):
-        # selected_action = input("please enter an action: ")
-        # input = np.array(selected_action,dtype=int)
+
         agent_action = env.action_space.sample()
 
         # action = env.action_space(agent_action)
@@ -34,6 +28,3 @@ if __name__ == "__main__":
             break
 
     print('bye')
-    # maze = MazeView2D(screen_size=(640, 640), maze_size=(6, 6))
-    # maze.update()
-    # input("Enter any key to quit.")
